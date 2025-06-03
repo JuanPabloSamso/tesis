@@ -1,0 +1,16 @@
+# Ignorar todas las carpetas excepto backend y super-barato
+ATOMO/
+CARREFOUR/
+Error/
+JUMBO/
+LIBERTAD/
+MASONLINE/
+VEA/
+
+# Ignorar archivos innecesarios dentro de backend
+backend/app/__pycache__/
+backend/scrap/__pycache__/
+
+# Ignorar archivos innecesarios dentro de super-barato
+super-barato/public/
+super-barato/src/assets/no-image.png
