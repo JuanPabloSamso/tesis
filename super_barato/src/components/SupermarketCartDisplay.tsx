@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Product, Supermarket, ProductPrice } from '../types';
+import { Product, Supermarket, ProductPrice } from '../../types';
 import { Icons } from '../../constants';
 import { useCart } from '../contexts/CartContext';
 

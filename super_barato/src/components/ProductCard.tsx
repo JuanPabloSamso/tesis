@@ -1,10 +1,10 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Product } from '../types';
+import { Product } from '../../types';
 import { useCart } from '../contexts/CartContext';
 import { getCheapestPriceForProduct } from '../services/mockData';
-import { MASONLINE_COLORS } from '../../constants';
+import { COLORS } from '../../constants';
 
 interface ProductCardProps {
   product: Product;
@@ -44,7 +44,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           )}
           <button
             onClick={handleAddToCart}
-            className={`w-full ${MASONLINE_COLORS.secondaryBlue} text-white py-2 px-4 rounded-md hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-mason-blue/50`}
+            className={`w-full ${COLORS.secondaryBlue} text-white py-2 px-4 rounded-md hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-mason-blue/50`}
           >
             Agregar al Carrito
           </button>

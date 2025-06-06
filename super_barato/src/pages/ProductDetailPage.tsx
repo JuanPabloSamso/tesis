@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Product, ProductPrice, Supermarket } from '../types';
+import { Product, ProductPrice, Supermarket } from '../../types';
 import { getProductByEan, getProductPricesByEan, getSupermarketById } from '../services/mockData';
 import { useCart } from '../contexts/CartContext';
 import LoadingSpinner from '../components/LoadingSpinner';

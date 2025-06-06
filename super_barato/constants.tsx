@@ -1,10 +1,6 @@
 
 import React from 'react';
 
-export const API_KEY = process.env.API_KEY || "YOUR_API_KEY"; // Fallback for local dev if not set
-
-export const GEMINI_MODEL_TEXT = "gemini-2.5-flash-preview-04-17";
-
 export const Icons = {
   ShoppingCart: (props: React.SVGProps<SVGSVGElement>) => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" {...props}>
@@ -38,7 +34,7 @@ export const Icons = {
   ),
 };
 
-export const MASONLINE_COLORS = {
+export const COLORS = {
   primaryRed: 'bg-mason-red', // #E63946
   textPrimaryRed: 'text-mason-red',
   secondaryBlue: 'bg-mason-blue', // #457B9D

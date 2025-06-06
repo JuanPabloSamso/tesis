@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Product } from '../types';
+import { Product } from '../../types';
 import { getProducts } from '../services/mockData';
 import ProductCard from '../components/ProductCard';
 import LoadingSpinner from '../components/LoadingSpinner';

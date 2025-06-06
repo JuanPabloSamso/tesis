@@ -1,14 +1,14 @@
 
 import React, { useState, useEffect, useMemo } from 'react';
 import { useCart } from '../contexts/CartContext';
-import { Product, Supermarket, ProductPrice, CartItem as GlobalCartItem } from '../types';
+import { Product, Supermarket, ProductPrice, CartItem as GlobalCartItem } from '../../types';
 import { getProductByEan, getSupermarkets, getProductPrice, MOCK_PRODUCTS, MOCK_PRODUCT_PRICES, MOCK_SUPERMARKETS } from '../services/mockData';
 import SupermarketCartDisplay from '../components/SupermarketCartDisplay';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { Link } from 'react-router-dom';
 import { generateStoryFromCart } from '../services/geminiService';
 import { Icons, MASONLINE_COLORS } from '../../constants';
-import { GroundingChunk } from '../types';
+import { GroundingChunk } from '../../types';
 
 
 interface ProductInCart extends Product {

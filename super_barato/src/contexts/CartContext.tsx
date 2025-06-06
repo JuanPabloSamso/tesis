@@ -1,6 +1,6 @@
 
 import React, { createContext, useContext, useReducer, ReactNode, useCallback } from 'react';
-import { CartItem, Product } from '../types';
+import { CartItem, Product } from '../../types';
 
 interface CartState {
   items: CartItem[];

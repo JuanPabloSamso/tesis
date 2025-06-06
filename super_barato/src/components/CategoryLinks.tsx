@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Category } from '../types';
+import { Category } from '../../types';
 import { getCategories } from '../services/mockData';
 import LoadingSpinner from './LoadingSpinner';
 

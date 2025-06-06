@@ -4,12 +4,12 @@ import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import CartIcon from './CartIcon';
 import CategoryLinks from './CategoryLinks';
-import { Icons, MASONLINE_COLORS } from '../../constants';
+import { Icons, COLORS } from '../../constants';
 
 const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-50">
-      <div className={`${MASONLINE_COLORS.primaryRed} text-white shadow-lg`}>
+      <div className={`${COLORS.primaryRed} text-white shadow-lg`}>
         <div className="container mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between space-y-3 sm:space-y-0">
           <Link to="/" className="text-3xl font-bold tracking-tight">
             SuperBarato

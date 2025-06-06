@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Product, Category as CategoryType } from '../types';
+import { Product, Category as CategoryType } from '../../types';
 import { getProductsByCategoryId, getCategoryById } from '../services/mockData';
 import ProductCard from '../components/ProductCard';
 import LoadingSpinner from '../components/LoadingSpinner';
