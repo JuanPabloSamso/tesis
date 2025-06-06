@@ -12,5 +12,5 @@ backend/app/__pycache__/
 backend/scrap/__pycache__/
 
 # Ignorar archivos innecesarios dentro de super-barato
-super-barato/public/
-super-barato/src/assets/no-image.png
+super_barato/public/
+super_barato/src/assets/no-image.png

@@ -1,0 +1,6 @@
+{
+  "name": "SuperBarato",
+  "description": "A React application for comparing product prices across different supermarkets, featuring multi-supermarket cart comparison",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
