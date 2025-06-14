@@ -16,6 +16,7 @@ class CategoryOut(BaseModel):
 
 class ProductPriceOut(BaseModel):
     price: Decimal
+    supermarket_id: int
     supermarket: str = Field(alias="supermarket_name")
 
     class Config:

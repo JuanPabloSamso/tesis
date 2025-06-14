@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
 import CategoryPage from './pages/CategoryPage';
 import ProductDetailPage from './pages/ProductDetailPage';
 import CartPage from './pages/CartPage';
+import SearchResultsPage from './pages/SearchResultsPage';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import { CartProvider } from './contexts/CartContext';
@@ -23,6 +23,7 @@ const App: React.FC = () => {
               <Route path="/category/" element={<HomePage />} /> 
               <Route path="/product/:ean" element={<ProductDetailPage />} />
               <Route path="/cart" element={<CartPage />} />
+              <Route path="/search" element={<SearchResultsPage />} />
               {/* Add a catch-all or 404 page if needed */}
               <Route path="*" element={<HomePage />} />
             </Routes>

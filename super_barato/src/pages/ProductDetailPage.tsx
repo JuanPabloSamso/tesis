@@ -1,12 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { Product, ProductPrice, Supermarket } from '../../types';
-import { getProductByEan, getProductPricesByEan, getSupermarketById } from '../services/mockData';
+import { getProductByEan } from '../services/api';
 import { useCart } from '../contexts/CartContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 // import GeminiProductAssistant from '../components/GeminiProductAssistant'; // Removed
-import { MASONLINE_COLORS } from '../../constants';
+import { APP_COLORS } from '../../constants';
 
 interface ProductPriceDetail extends ProductPrice {
   supermarketName: string;
@@ -29,18 +28,20 @@ const ProductDetailPage: React.FC = () => {
         setProduct(productData || null);
 
         if (productData) {
-          const priceData = await getProductPricesByEan(ean);
-          const detailedPrices: ProductPriceDetail[] = await Promise.all(
-            priceData.map(async (pp) => {
-              const supermarket = await getSupermarketById(pp.supermarket_id);
-              return { ...pp, supermarketName: supermarket?.name || 'Desconocido' };
-            })
-          );
-          detailedPrices.sort((a,b) => a.price - b.price); // Sort by price ascending
-          setPrices(detailedPrices);
+          console.log("Product Data received in ProductDetailPage:", productData);
+          if (productData.prices) {
+            console.log("Product Prices received in ProductDetailPage:", productData.prices);
+            const detailedPrices: ProductPriceDetail[] = productData.prices.map(pp => ({
+              ...pp,
+              supermarketName: pp.supermarket,
+            }));
+            detailedPrices.sort((a,b) => a.price - b.price);
+            setPrices(detailedPrices);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch product details:", error);
+        setProduct(null);
       } finally {
         setLoading(false);
       }
@@ -63,7 +64,20 @@ const ProductDetailPage: React.FC = () => {
   }
 
   if (!product) {
-    return <div className="container mx-auto px-4 py-8 text-center text-red-500">Producto no encontrado.</div>;
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center">
+          <h2 className="text-xl font-semibold text-red-700 mb-2">Producto no encontrado</h2>
+          <p className="text-red-600 mb-4">El producto que estás buscando no existe en nuestra base de datos o no está disponible en este momento.</p>
+          <Link 
+            to="/" 
+            className={`inline-block ${APP_COLORS.actionRed} text-white px-6 py-2 rounded-md hover:${APP_COLORS.actionRedHover} transition-colors`}
+          >
+            Volver a la tienda
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -97,32 +111,28 @@ const ProductDetailPage: React.FC = () => {
 
             <button
               onClick={handleAddToCart}
-              className={`w-full ${MASONLINE_COLORS.primaryRed} text-white py-3 px-6 rounded-md text-lg font-semibold hover:bg-opacity-90 transition-colors focus:outline-none focus:ring-2 focus:ring-mason-red/50`}
+              className={`w-full ${APP_COLORS.primaryBlue} text-white py-3 px-6 rounded-md text-lg font-semibold hover:${APP_COLORS.primaryBlueDark} transition-colors focus:outline-none focus:ring-2 focus:ring-[#2563EB]/50`}
             >
               Agregar al Carrito
             </button>
 
-            <div className="mt-8">
-              <h2 className="text-xl font-semibold text-gray-700 mb-3">Precios por Supermercado:</h2>
-              {prices.length > 0 ? (
-                <ul className="space-y-2">
-                  {prices.map((priceDetail, index) => (
-                    <li key={priceDetail.supermarket_id} className={`flex justify-between items-center p-3 rounded-md ${index === 0 ? 'bg-green-100 border-green-500 border-2' : 'bg-gray-50 border'}`}>
-                      <span className={`font-medium ${index === 0 ? 'text-green-700' : 'text-gray-700'}`}>{priceDetail.supermarketName}</span>
-                      <span className={`font-bold text-lg ${index === 0 ? 'text-green-600' : MASONLINE_COLORS.darkText}`}>
-                        ${priceDetail.price.toFixed(2)}
-                        {index === 0 && <span className="ml-2 text-xs font-normal px-2 py-0.5 bg-green-500 text-white rounded-full">Más barato</span>}
-                      </span>
+            <h2 className={`text-2xl font-bold ${APP_COLORS.neutral800} mt-8 mb-4`}>Precios en Supermercados</h2>
+            {
+              prices.length > 0 ? (
+                <ul className="space-y-3">
+                  {prices.map((price, index) => (
+                    <li key={price.supermarket_id} className="flex justify-between items-center bg-gray-50 p-4 rounded-lg">
+                      <span className={`font-bold text-lg ${index === 0 ? APP_COLORS.accentGreen : APP_COLORS.neutral700}`}>{price.supermarketName}</span>
+                      <span className={`text-xl font-bold ${index === 0 ? APP_COLORS.accentGreen : APP_COLORS.neutral800}`}>${Number(price.price).toFixed(2)}</span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-500">Este producto no está disponible en los supermercados registrados o no se encontraron precios.</p>
-              )}
-            </div>
+                <p className={`${APP_COLORS.neutral500}`}>No hay precios disponibles para este producto en ningún supermercado.</p>
+              )
+            }
           </div>
         </div>
-        {/* <GeminiProductAssistant productName={product.name} /> Removed */}
       </div>
     </div>
   );

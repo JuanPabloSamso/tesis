@@ -1,25 +1,26 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import SearchBar from './SearchBar';
 import CartIcon from './CartIcon';
 import CategoryLinks from './CategoryLinks';
-import { Icons, COLORS } from '../../constants';
+import { Icons, APP_COLORS } from '../../constants';
 
 const Header: React.FC = () => {
   return (
     <header className="sticky top-0 z-50">
-      <div className={`${COLORS.primaryRed} text-white shadow-lg`}>
-        <div className="container mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between space-y-3 sm:space-y-0">
-          <Link to="/" className="text-3xl font-bold tracking-tight">
-            SuperBarato
+      <div className={`${APP_COLORS.primaryBlue} text-white shadow-lg`}>
+        <div className="container mx-auto flex items-center justify-between p-4">
+          <Link to="/" className="flex items-center space-x-2">
+            {/* Replace with your logo/icon if desired */}
+            <span className="text-2xl font-bold">SuperBarato</span>
           </Link>
-          <div className="w-full sm:w-auto flex-grow sm:flex-grow-0 sm:mx-4 order-last sm:order-none mt-3 sm:mt-0">
+
+          <div className="flex-grow flex justify-center mx-4">
             <SearchBar />
           </div>
+
           <div className="flex items-center space-x-4">
-            {/* Placeholder for User Icon/Login */}
-            <button className="flex items-center p-2 hover:bg-mason-red/80 rounded-md transition-colors">
+            <button className={`flex items-center p-2 hover:${APP_COLORS.primaryBlueDark} rounded-md transition-colors`}>
               <Icons.User className="w-7 h-7" />
             </button>
             <CartIcon />

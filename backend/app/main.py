@@ -57,11 +57,12 @@ def _startup_create_tables() -> None:
 
 # ────────────────────────── Endpoints públicos ─────────────────────────
 
-@app.get("/supermarkets", response_model=List[str])
+@app.get("/supermarkets", response_model=List[dict])
 def list_supermarkets(db: Session = Depends(get_db)):
+    """Lista todos los supermercados registrados."""
     return [
-        name
-        for (name,) in db.query(Supermarket.name).order_by(Supermarket.name)
+        {"supermarket_id": id, "name": name}
+        for (id, name) in db.query(Supermarket.id, Supermarket.name).order_by(Supermarket.name)
     ]
 
 

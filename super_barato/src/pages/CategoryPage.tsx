@@ -1,34 +1,69 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { Product, Category as CategoryType } from '../../types';
-import { getProductsByCategoryId, getCategoryById } from '../services/mockData';
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { Product } from '../services/api';
+import { getProducts } from '../services/api';
 import ProductCard from '../components/ProductCard';
 import LoadingSpinner from '../components/LoadingSpinner';
+import { APP_COLORS } from '../../constants';
+
+const LIMIT = 20;
 
 const CategoryPage: React.FC = () => {
   const { categoryId } = useParams<{ categoryId: string }>();
   const [products, setProducts] = useState<Product[]>([]);
-  const [category, setCategory] = useState<CategoryType | null>(null);
   const [loading, setLoading] = useState(true);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const [isFetchingMore, setIsFetchingMore] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchProducts = useCallback(async (reset = false) => {
+    if (!categoryId) return;
+    if (!reset && !hasMore) return;
+    try {
+      if (reset) {
+        setLoading(true);
+        setOffset(0);
+        setHasMore(true);
+      } else {
+        setIsFetchingMore(true);
+      }
+      const data = await getProducts({ category: categoryId, limit: LIMIT, offset: reset ? 0 : offset });
+      if (reset) {
+        setProducts(data);
+        setOffset(LIMIT);
+        setHasMore(data.length === LIMIT);
+      } else {
+        setProducts(prev => [...prev, ...data]);
+        setOffset(prev => prev + LIMIT);
+        setHasMore(data.length === LIMIT);
+      }
+    } catch (error) {
+      console.error("Failed to fetch category products:", error);
+      setError("No se pudieron cargar los productos para esta categoría. Por favor, intenta de nuevo más tarde.");
+    } finally {
+      setLoading(false);
+      setIsFetchingMore(false);
+    }
+  }, [categoryId, offset, hasMore]);
 
   useEffect(() => {
-    const fetchCategoryData = async () => {
-      if (!categoryId) return;
-      try {
-        setLoading(true);
-        const catData = await getCategoryById(categoryId);
-        setCategory(catData || null); // Set to null if not found
-        const productData = await getProductsByCategoryId(categoryId);
-        setProducts(productData);
-      } catch (error) {
-        console.error("Failed to fetch category data:", error);
-        setCategory(null); // Ensure category is null on error
-      } finally {
-        setLoading(false);
+    fetchProducts(true);
+    // eslint-disable-next-line
+  }, [categoryId]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 300 &&
+        !loading && !isFetchingMore && hasMore
+      ) {
+        fetchProducts();
       }
     };
-    fetchCategoryData();
-  }, [categoryId]);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [loading, isFetchingMore, hasMore, fetchProducts]);
 
   if (loading) {
     return (
@@ -38,29 +73,29 @@ const CategoryPage: React.FC = () => {
     );
   }
 
-  const getCategoryDisplayName = (cat: CategoryType | null) => {
-    if (!cat) return "Categoría Desconocida";
-    // Only display the main category name
-    return cat.category; 
-  };
-  
-  // If categoryId is undefined (e.g. direct access to /category/ without an ID, handled by App.tsx to show HomePage),
-  // this page won't be rendered with that state. This is for when categoryId is present.
-  const displayName = getCategoryDisplayName(category);
-
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-800 mb-8">
-        {displayName}
+      <h1 className={`text-3xl font-bold ${APP_COLORS.neutral800} mb-8`}>
+        {categoryId || 'Categoría'}
       </h1>
-      {products.length === 0 && !loading ? (
-        <p className="text-gray-600">No hay productos en esta categoría.</p>
+      {error ? (
+        <p className={`${APP_COLORS.actionRed}`}>{error}</p>
+      ) : products.length === 0 ? (
+        <p className={`${APP_COLORS.neutral700}`}>No se encontraron productos en esta categoría.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products.map((product) => (
             <ProductCard key={product.ean} product={product} />
           ))}
         </div>
+      )}
+      {(loading || isFetchingMore) && (
+        <div className="flex justify-center items-center py-8">
+          <LoadingSpinner />
+        </div>
+      )}
+      {!hasMore && products.length > 0 && (
+        <div className="text-center text-gray-400 py-4">No hay más productos para mostrar.</div>
       )}
     </div>
   );

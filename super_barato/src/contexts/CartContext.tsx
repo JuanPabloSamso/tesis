@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useReducer, ReactNode, useCallback } from 'react';
 import { CartItem, Product } from '../../types';
 
@@ -32,7 +31,10 @@ const cartReducer = (state: CartState, action: CartAction): CartState => {
       const existingItemIndex = state.items.findIndex(item => item.ean === action.product.ean);
       if (existingItemIndex > -1) {
         const newItems = [...state.items];
-        newItems[existingItemIndex].quantity += (action.quantity || 1);
+        newItems[existingItemIndex] = {
+          ...newItems[existingItemIndex],
+          quantity: newItems[existingItemIndex].quantity + (action.quantity || 1)
+        };
         return { ...state, items: newItems };
       }
       return { ...state, items: [...state.items, { ean: action.product.ean, quantity: action.quantity || 1 }] };

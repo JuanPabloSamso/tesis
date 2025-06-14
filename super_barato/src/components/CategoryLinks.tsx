@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Category } from '../../types';
-import { getCategories } from '../services/mockData';
+import { getCategories } from '../services/api';
 import LoadingSpinner from './LoadingSpinner';
-
-interface UniqueCategoryLink {
-  displayName: string;
-  linkId: string;
-}
+import { APP_COLORS } from '../../constants';
 
 const CategoryLinks: React.FC = () => {
-  const [uniqueCategories, setUniqueCategories] = useState<UniqueCategoryLink[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,20 +13,7 @@ const CategoryLinks: React.FC = () => {
       try {
         setLoading(true);
         const data = await getCategories();
-        
-        const processedCategories: UniqueCategoryLink[] = [];
-        const seenMainCategories = new Set<string>();
-
-        data.forEach(cat => {
-          if (!seenMainCategories.has(cat.category)) {
-            seenMainCategories.add(cat.category);
-            processedCategories.push({
-              displayName: cat.category,
-              linkId: cat.category_id, // Link to the first specific category_id for this main category
-            });
-          }
-        });
-        setUniqueCategories(processedCategories);
+        setCategories((data as string[]) || []);
       } catch (error) {
         console.error("Failed to fetch categories:", error);
       } finally {
@@ -50,20 +32,20 @@ const CategoryLinks: React.FC = () => {
   }
 
   return (
-    <nav className="bg-white shadow-md">
+    <nav className={`${APP_COLORS.neutralWhite} shadow-sm`}>
       <div className="container mx-auto px-4 py-2 flex space-x-4 overflow-x-auto">
-        {uniqueCategories.map((category) => (
+        {categories.map((cat) => (
           <Link
-            key={category.linkId} // Use unique linkId which corresponds to a category_id
-            to={`/category/${category.linkId}`}
-            className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-mason-red whitespace-nowrap transition-colors"
+            key={cat}
+            to={`/category/${cat}`}
+            className={`px-3 py-2 text-sm font-medium ${APP_COLORS.neutral700} hover:${APP_COLORS.textCtaOrange} whitespace-nowrap transition-colors`}
           >
-            {category.displayName}
+            {cat}
           </Link>
         ))}
          <Link
             to={`/`}
-            className="px-3 py-2 text-sm font-medium text-gray-700 hover:text-mason-red whitespace-nowrap transition-colors"
+            className={`px-3 py-2 text-sm font-medium ${APP_COLORS.neutral700} hover:${APP_COLORS.textCtaOrange} whitespace-nowrap transition-colors`}
           >
             Ver Todos
           </Link>
